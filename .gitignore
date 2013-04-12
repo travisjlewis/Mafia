@@ -1,0 +1,11 @@
+.DS_Store
+Assembly-UnityScript-vs.unityproj
+Assembly-UnityScript.pidb
+Assembly-UnityScript.unityproj
+Freeze-csharp.sln
+Freeze.sln
+Freeze.userprefs
+Library/*
+Library
+Temp
+Temp/*
