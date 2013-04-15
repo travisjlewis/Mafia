@@ -1,5 +1,7 @@
 *.blend1
 *.blend2
+*.blend1.meta
+*.blend2.meta
 .DS_Store
 Assembly-UnityScript-vs.unityproj
 Assembly-UnityScript.pidb
