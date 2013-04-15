@@ -6,6 +6,11 @@ private var controller : PersonController;
 private var prevMovementSpeed : float;
 private var prevTurnSpeed : float;
 
+private var isFrozen : boolean = false;
+
+private var gizmoRayA : Vector3;
+private var gizmoRayB : Vector3;
+
 function Start () {
 	controller = GetComponent(PersonController);
 	prevTurnSpeed = controller.turnSpeed;
@@ -13,10 +18,53 @@ function Start () {
 }
 
 function BeFrozen () {
+	isFrozen = true;
 	Debug.Log("Be Frozen!");
 	controller.turnSpeed = prevTurnSpeed * lethargyFactor;
 	controller.movementSpeed = prevMovementSpeed * lethargyFactor;
-	yield WaitForSeconds(1.0);
+}
+
+function BeUnfrozen () {
+	isFrozen = false;
+	Debug.Log("Unfreeze!");
 	controller.turnSpeed = prevTurnSpeed;
 	controller.movementSpeed = prevMovementSpeed;
+}
+
+function OnTriggerEnter (other : Collider) {
+	if (other.tag == "FreezeRegion") {
+		var hit : RaycastHit;
+		var source : Vector3 = other.gameObject.transform.position;
+		var dir : Vector3 = (transform.position + Vector3.up*0.2) - source;
+		gizmoRayB = dir;
+		gizmoRayA = source;
+		// Make sure we can't be frozen through walls
+		if (Physics.Raycast (source, dir, hit)) {
+			if (hit.collider.gameObject == gameObject) {
+				Debug.Log(other.gameObject.transform.position);
+				if (!isFrozen) {
+					BeFrozen();	
+				}
+			} else {
+				if (isFrozen) {
+					BeUnfrozen();	
+				}
+			}
+		}
+		
+	}
+}
+
+function OnTriggerExit (other : Collider) {
+	if (other.tag == "FreezeRegion") {
+		if (isFrozen) {
+			BeUnfrozen();
+		}
+	}
+}
+
+function OnDrawGizmos () {
+	if (gizmoRayA != null && gizmoRayB != null) {
+		Gizmos.DrawRay (gizmoRayA, gizmoRayB);	
+	}
 }
