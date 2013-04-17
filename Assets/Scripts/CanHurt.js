@@ -4,19 +4,18 @@ var damage : float = 100.0;
 
 private var touching : GameObject = null;
 
-function Start () {
-
-}
-
 function Update () {
-	if (touching != null) {
+	if (touching != null && Input.GetButtonDown("Fire1")) {
 		touching.SendMessage("BeHurt", damage, SendMessageOptions.DontRequireReceiver);
 	}
 }
 
 function OnTriggerEnter(other : Collider) {
-	Debug.Log("Collide!");
+	Debug.Log("Hurt "+other.gameObject.name);
 	touching = other.gameObject;
+	if (touching.GetComponent(PlayerLocalNet) != null) {
+		touching = null;
+	}
 }
 
 function OnTriggerExit(other : Collider) { 
