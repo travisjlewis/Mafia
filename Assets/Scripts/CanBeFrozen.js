@@ -32,6 +32,7 @@ function BeUnfrozen () {
 }
 
 function OnTriggerEnter (other : Collider) {
+	Debug.Log("Check Freezing");
 	if (other.tag == "FreezeRegion") {
 		var hit : RaycastHit;
 		var source : Vector3 = other.gameObject.transform.position;
@@ -40,15 +41,18 @@ function OnTriggerEnter (other : Collider) {
 		gizmoRayA = source;
 		// Make sure we can't be frozen through walls
 		if (Physics.Raycast (source, dir, hit)) {
-			if (hit.collider.gameObject == gameObject) {
-				Debug.Log(other.gameObject.transform.position);
-				if (!isFrozen) {
+			Debug.Log(hit.collider.gameObject);
+			Debug.Log(gameObject);
+			if (hit.collider.gameObject == gameObject || hit.collider.gameObject.tag=="TeleporterRegion") {
+				//Debug.Log(other.gameObject.transform.position);
+
+				//if (!isFrozen) {
 					BeFrozen();	
-				}
+				//}
 			} else {
-				if (isFrozen) {
+				//if (isFrozen) {
 					BeUnfrozen();	
-				}
+				//}
 			}
 		}
 		
@@ -57,9 +61,9 @@ function OnTriggerEnter (other : Collider) {
 
 function OnTriggerExit (other : Collider) {
 	if (other.tag == "FreezeRegion") {
-		if (isFrozen) {
+		//if (isFrozen) {
 			BeUnfrozen();
-		}
+		//}
 	}
 }
 

@@ -36,6 +36,9 @@ function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
 	}
 	newObject.AddComponent("PlayerRemoteNet");
 	newObject.GetComponent(CharacterController).enabled = false;
+	var changeCamCpt = newObject.GetComponent(ChangeCam) as ChangeCam;
+	changeCamCpt.myCam.enabled = false;
+	changeCamCpt.enabled = false;
 	var nView : NetworkView;
     nView = newObject.GetComponent(NetworkView);
     nView.viewID = viewID;
