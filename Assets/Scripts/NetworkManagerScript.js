@@ -1,12 +1,14 @@
 #pragma strict
 
-var spawnObject : Transform;
+var spawnObjects : Transform[];
 
 private var gameName : String = "Olin_VGV_Proto_00";
 private var bttnDims : Rect;
 private var isRefreshing : boolean = false;
 private var hostData : HostData[];
 private var hasCharacter : boolean = false;
+private var colorList : Color[];
+
 
 var totalPlayers : int;
 var playersToJoin : int;
@@ -18,14 +20,21 @@ function Start () {
 						Screen.width * 0.05,
 						Screen.width * 0.2,
 						Screen.height * 0.05);
+	playersToJoin = totalPlayers;
+	colorList = new Color[6];
+	colorList[0] = Color.red;
+	colorList[1] = Color.blue;
+	colorList[2] = Color.green;
+	colorList[3] = Color.white;
+	colorList[4] = Color.black;
+	colorList[5] = Color.yellow;
+	playerNetworkIds = new NetworkViewID[totalPlayers];
 }
 
 function StartServer () {
 	// Max players, Port#, use NAT?
 	Network.InitializeServer(32, 25000, false);
 	MasterServer.RegisterHost(gameName, "Freeze", "Prototype for VGV");
-	playersToJoin = totalPlayers;
-	playerNetworkIds = new NetworkViewID[totalPlayers];
 }
 
 function refreshHostList() {
@@ -43,6 +52,8 @@ function becomeMafia(viewID : NetworkViewID) {
 
 @RPC
 function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
+	var spawnObject : Transform = spawnObjects[totalPlayers-playersToJoin];
+	playersToJoin--;
 	var newObject : GameObject;
 	if (team == 0) {
 		newObject = Instantiate(Resources.Load("FreezerPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
@@ -52,7 +63,6 @@ function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
 		newObject = Instantiate(Resources.Load("MafiaPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
 		if (Network.isServer) {
 			playerNetworkIds[totalPlayers-playersToJoin] = viewID;
-			playersToJoin--;
 		}
 	}
 	newObject.AddComponent("PlayerRemoteNet");
@@ -66,6 +76,8 @@ function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
 }
 
 function spawnPlayer(viewID : NetworkViewID, team : int) {
+	var spawnObject : Transform = spawnObjects[totalPlayers-playersToJoin];
+	playersToJoin--;
 	var newObject : GameObject;
 	if (team == 0) {
 		newObject = Instantiate(Resources.Load("FreezerPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
@@ -74,7 +86,6 @@ function spawnPlayer(viewID : NetworkViewID, team : int) {
 	} else {
 		if (Network.isServer) {
 			playerNetworkIds[totalPlayers-playersToJoin] = viewID;
-			playersToJoin--;
 		}
 		newObject = Instantiate(Resources.Load("MafiaPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
 		newObject.GetComponent(MafiaPotential).enabled = false;
@@ -83,6 +94,8 @@ function spawnPlayer(viewID : NetworkViewID, team : int) {
 	var nView : NetworkView;
     nView = newObject.GetComponent(NetworkView);
     nView.viewID = viewID;
+
+
 }
 
 function spawnFreezer() {
@@ -102,6 +115,13 @@ function spawnMafiaChar() {
 	var viewID : NetworkViewID = Network.AllocateViewID();
 	spawnPlayer(viewID, 2);
  	networkView.RPC("spawnPlayerRemotely", RPCMode.OthersBuffered, viewID, 2);
+ 	networkView.RPC("SetColor", RPCMode.AllBuffered, viewID, playersToJoin);
+}
+
+@RPC
+function SetColor(viewID : NetworkViewID, colorNum : int) {
+	var view : NetworkView = NetworkView.Find(viewID);
+	view.renderer.material.color = colorList[colorNum];
 }
 
 function OnMasterServerEvent(mse:MasterServerEvent) {
