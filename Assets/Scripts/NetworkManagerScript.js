@@ -85,6 +85,8 @@ function spawnPlayer(viewID : NetworkViewID, team : int) {
 		newObject = Instantiate(Resources.Load("ToucherPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
 	} else {
 		if (Network.isServer) {
+			Debug.Log("Players Tot: "+ totalPlayers);
+			Debug.Log("Players To Join: "+ playersToJoin);
 			playerNetworkIds[totalPlayers-playersToJoin] = viewID;
 		}
 		newObject = Instantiate(Resources.Load("MafiaPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
