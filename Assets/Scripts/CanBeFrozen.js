@@ -19,20 +19,20 @@ function Start () {
 
 function BeFrozen () {
 	isFrozen = true;
-	Debug.Log("Be Frozen!");
+	//Debug.Log("Be Frozen!");
 	controller.turnSpeed = prevTurnSpeed * lethargyFactor;
 	controller.movementSpeed = prevMovementSpeed * lethargyFactor;
 }
 
 function BeUnfrozen () {
 	isFrozen = false;
-	Debug.Log("Unfreeze!");
+	//Debug.Log("Unfreeze!");
 	controller.turnSpeed = prevTurnSpeed;
 	controller.movementSpeed = prevMovementSpeed;
 }
 
 function OnTriggerEnter (other : Collider) {
-	Debug.Log("Check Freezing");
+	//Debug.Log("Check Freezing");
 	if (other.tag == "FreezeRegion") {
 		var hit : RaycastHit;
 		var source : Vector3 = other.gameObject.transform.position;
