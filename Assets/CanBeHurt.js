@@ -15,8 +15,8 @@ function RemoteBeHurt(viewID : NetworkViewID, damage : float) {
 
 function Update () {
 	if (health <= 0.0) {
-		if (GetComponent(CanHurt)) {
-			GetComponent(CanHurt).enabled = false;	
+		if (GetComponentInChildren(CanHurt)) {
+			GetComponentInChildren(CanHurt).enabled = false;	
 		}
 		if (GetComponent(MeshRenderer)) {
 			GetComponent(MeshRenderer).enabled = false;
