@@ -23,3 +23,9 @@ function Update () {
 		}
 	}
 }
+
+function OnGUI() {
+	if (health <= 0.0) {
+		GUI.Label (Rect (10, 40, 100, 20), "DEAD");	
+	}
+}
