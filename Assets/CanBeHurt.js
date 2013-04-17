@@ -25,7 +25,7 @@ function Update () {
 }
 
 function OnGUI() {
-	if (health <= 0.0) {
+	if (health <= 0.0 && GetComponent(PlayerLocalNet) != null) {
 		GUI.Label (Rect (10, 40, 100, 20), "DEAD");	
 	}
 }
