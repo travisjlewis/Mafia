@@ -51,9 +51,14 @@ function becomeMafia(viewID : NetworkViewID) {
 }
 
 @RPC
+function decrementPlayersToJoin() {
+	Debug.Log(playersToJoin);
+	playersToJoin--;
+}
+
+@RPC
 function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
 	var spawnObject : Transform = spawnObjects[totalPlayers-playersToJoin];
-	playersToJoin--;
 	var newObject : GameObject;
 	if (team == 0) {
 		newObject = Instantiate(Resources.Load("FreezerPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
@@ -77,7 +82,6 @@ function spawnPlayerRemotely(viewID : NetworkViewID, team : int) {
 
 function spawnPlayer(viewID : NetworkViewID, team : int) {
 	var spawnObject : Transform = spawnObjects[totalPlayers-playersToJoin];
-	playersToJoin--;
 	var newObject : GameObject;
 	if (team == 0) {
 		newObject = Instantiate(Resources.Load("FreezerPlayer"), spawnObject.position, Quaternion.identity) as GameObject;
@@ -117,6 +121,7 @@ function spawnMafiaChar() {
 	var viewID : NetworkViewID = Network.AllocateViewID();
 	spawnPlayer(viewID, 2);
  	networkView.RPC("spawnPlayerRemotely", RPCMode.OthersBuffered, viewID, 2);
+ 	networkView.RPC("decrementPlayersToJoin", RPCMode.AllBuffered);
  	networkView.RPC("SetColor", RPCMode.AllBuffered, viewID, playersToJoin);
 }
 
