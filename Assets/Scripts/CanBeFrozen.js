@@ -1,6 +1,7 @@
 #pragma strict
 
-var lethargyFactor : float = 0.01;
+var lethargyMovementFactor : float = 0.01;
+var lethargyTurnFactor : float = 0.01;
 
 private var controller : PersonController;
 private var prevMovementSpeed : float;
@@ -20,8 +21,8 @@ function Start () {
 function BeFrozen () {
 	isFrozen = true;
 	//Debug.Log("Be Frozen!");
-	controller.turnSpeed = prevTurnSpeed * lethargyFactor;
-	controller.movementSpeed = prevMovementSpeed * lethargyFactor;
+	controller.turnSpeed = prevTurnSpeed * lethargyTurnFactor;
+	controller.movementSpeed = prevMovementSpeed * lethargyMovementFactor;
 }
 
 function BeUnfrozen () {

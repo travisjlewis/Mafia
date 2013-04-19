@@ -21,6 +21,18 @@ function Update () {
 		if (GetComponent(MeshRenderer)) {
 			GetComponent(MeshRenderer).enabled = false;
 		}
+		if (GetComponent(CanFreeze)) {
+			var canFreezeCpt : CanFreeze = GetComponent(CanFreeze) as CanFreeze;
+			if (canFreezeCpt.freezeRegion != null) {
+				Destroy(canFreezeCpt.freezeRegion);	
+			}
+		}
+		if (GetComponent(CanBeFrozen)) {
+			var canBeFrozenCpt : CanBeFrozen = GetComponent(CanBeFrozen) as CanBeFrozen;
+			canBeFrozenCpt.BeUnfrozen();
+			canBeFrozenCpt.enabled = false;
+		}
+
 	}
 }
 
